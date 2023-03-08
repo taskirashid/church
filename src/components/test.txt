@@ -1,0 +1,124 @@
+<template v-else>
+    <div>
+        <div class="page-header with-actions">
+            <h1>Addresses</h1>
+            <div class="actions">
+                <b-btn @click="addAddress" variant="primary"><i class="oi oi-plus"></i> Add Address</b-btn>
+            </div>
+        </div>
+        <div v-if="isLoaded === true">
+            <div v-if="addressList.length">
+                <b-form @submit.prevent="submit">
+                    <validation-summary :errors="errors"></validation-summary>
+    
+                    <div class="row">
+                        <div class="col-sm-4" v-for="address in addressList">
+                            <div class="card bg-light mb-4">
+                                <div class="card-header">
+                                    {{address.countryName}}
+                                    <div class="float-right">
+                                        <b-btn @click="editAddress(address.id)" class="btn btn-default btn-sm" data-toggle="tooltip" title="Edit address">
+                                            <i class="fa fa-edit" aria-hidden="true"></i>
+                                        </b-btn>
+                                        <b-btn @click="deleteAddress(address.id)" class="btn btn-default btn-sm" data-toggle="tooltip" title="Delete address">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </b-btn>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <em class="card-text">{{address.city}},</em><br />
+                                    <em class="card-text">{{address.streetAddress}},</em><br />
+                                    <em class="card-text">{{address.zip}}</em><br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </b-form>
+            </div>
+            <div v-else class="alert alert-info" role="alert">
+                There are no <strong>addresses</strong> yet!
+            </div>
+        </div>
+        <add-address-modal ref="addAddressModal" @success="addressAdded"></add-address-modal>
+        <edit-address-modal ref="editAddressModal" @success="addressEdited></edit-address-modal>
+    </div>
+    </template>
+    
+    <script>
+    import Vue from 'vue';
+    import modalFormMixin from 'mixins/modal-form-mixin';
+    import formMixin from 'mixins/form-mixin';
+    import accountService from 'services/account-service';
+    
+    import AddAddressModal from './add-address-modal';
+    import EditAddressModal from './edit-address-modal';
+    
+    export default {
+        mixins: [modalFormMixin],
+        mixins: [formMixin],
+    
+        components: {
+            'add-address-modal': AddAddressModal,
+            'edit-address-modal': EditAddressModal
+        },
+    
+        data() {
+            return {
+                addressList: [],
+                isLoaded: false,
+            }
+        },
+    
+        async beforeRouteEnter(to, from, next) {
+            next(async (c) => await c.initData());
+        },
+    
+        methods: {
+
+            async loadAddressList() {
+                this.addressList = await accountService.getAddressList();
+                await this.$nextTick() // waits for the next event tick before completeing function.
+            },
+
+
+
+            async initData() {
+                await this.loadAddressList(); //when opening page
+    
+                this.isLoaded = true;
+            },
+    
+            async loadAddressList() {
+                this.addressList = await accountService.getAddressList();
+            },
+    
+            addAddress(data) {
+                this.$refs.addAddressModal.show();
+            },
+    
+            editAddress(id) {
+                this.$refs.editAddressModal.show(id);
+            },
+    
+            async deleteAddress(id) {
+                await accountService.deleteAddress(id);
+    
+                this.loadAddressList(); //need to change
+    
+                this.$root.successToast('Address deleted');
+            },
+    
+            addressAdded() {
+                this.loadAddressList(); //need to change
+    
+                this.$root.successToast('Address added');
+            },
+    
+            addressEdited() {
+                this.loadAddressList(); //need to change
+    
+                this.$root.successToast('Address edited');
+            }
+        }
+    }
+    </script>
