@@ -5,7 +5,7 @@ const instance = axios.create({
 })
 
 const token = localStorage.getItem('token');
-console.log(token)
+// console.log(token)
 
 instance.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 

@@ -65,12 +65,12 @@ export default {
         console.log(this.message);
         
         const response = await axios.post('/organisation/create', {organisationName: this.message});
-        console.log(response.data);
+        // alert(response);
         this.organisationName=response.data.organisation
         this.$emit('getOrgansiationList')
 
         } catch (error) {
-            console.error(error);
+            console.log(error.data + '--error');
         }
     }
 

@@ -4,7 +4,8 @@
           <table class="table">
             <thead>
               <tr>
-                <th></th>
+                <th scope="col">#</th>
+                <th scope="col"></th>
                 <th scope="col">Name</th>
                 <th scope="col">Member id</th>
                 <th scope="col">Edavaka register no</th>
@@ -13,7 +14,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in list" :key="item.id">
+              <tr v-for=" item, index in list" :key="item.id">
+                <td>{{ index + 1 }}</td>
                 <td class="profile">
                     <img :src="item.member_photo" alt="">
                 </td>
@@ -425,6 +427,21 @@
 
             </tbody>
           </table>
+
+          
+
+          <!-- <paginate
+                  :page-count="pageCount"
+                  :click-handler="changePage"
+                  :prev-text="'Previous'"
+                  :next-text="'Next'"
+                  :container-class="'pagination'"
+                  :page-class="'page-item'"
+                  :prev-class="'page-item'"
+                  :next-class="'page-item'"
+                  :active-class="'active'"
+                /> -->
+
         </div>
     </div>
 </template>
@@ -432,11 +449,17 @@
 <script>
 import moment from 'moment'
 import axios from '@/axios/axios'
+import { debounce } from 'lodash';
+// import Paginate from 'vuejs-paginate';
 
 export default {
   name: 'Members-',
+  components: {
+    // Paginate,
+  },
   props: {
     memberValue: Boolean,
+    serachData: String,
   },
     data(){
       return{
@@ -446,13 +469,36 @@ export default {
         dataToUpdate: '',
         dialog: false,
         file: '',
+
+        
+      // currentPage: 1,
+      // pageSize: 3,
       }
     },
+    
+  // computed: {
+  //   pageCount() {
+  //     return Math.ceil(this.data.length / this.pageSize);
+  //   },
+  //   paginatedData() {
+  //     const start = (this.currentPage - 1) * this.pageSize;
+  //     const end = start + this.pageSize;
+  //     return this.data.slice(start, end);
+  //   },
+  // },
+
     
     watch: {
       memberValue() {
         this.getMemberList()
-      }
+      },
+      // serachData() {
+      //   this.getMemberList()
+      // },
+      serachData: debounce(function(newSearchTerm) {
+        this.getMemberList(newSearchTerm);
+    }, 1000),
+
     },
     
     async mounted() {
@@ -462,7 +508,7 @@ export default {
     },
     methods: {
       async getMemberList() {
-        const response = await axios.post(`/member/getAllMember`)
+        const response = await axios.post(`/member/getAllMember?search=${this.serachData}`)
         console.log(response)
         console.warn(response.data)
         this.list=response.data
@@ -547,9 +593,11 @@ export default {
           this.getMemberList()
           this.getPrayerGroupList()
           this.getOrgansiationList()
+
         }
         catch(error){
           console.log(error)
+
         }
       },
 

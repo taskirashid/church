@@ -46,12 +46,13 @@ instance.interceptors.response.use((response) => {
   }
   return response
 },  (error) => {
-    // console.log(error)
+    console.log(error)
     if(error.response.status === 401){
       router.push('/login')
       localStorage.removeItem('token')
       instance.defaults.headers.common['Authorization'] = ''
     }
+    return error
  }
 )
 

@@ -5,12 +5,14 @@
       
         <div class="search-wrapper">
           <span class="las la-search"></span>
-          <input type="search" placeholder="Search here">
+          <input type="search" placeholder="Search here" v-model="searchTerm">
         </div>
 
       <MemberPost @getMemberList="getMemberList"/>
     </div>
-    <Members :memberValue="memberValue"/>
+    
+      <Members :memberValue="memberValue" :serachData = 'searchTerm'/>
+      
   </div>
 </template>
 
@@ -26,9 +28,15 @@ export default {
   },
   data() {
     return {
+      searchTerm: '',
+      searchResults: [],
       memberValue: false,
     }
   },
+
+    // async mounted() {
+    //    this.getMemberList()
+    // },
   methods:{
     getMemberList(){
       this.memberValue = !this.memberValue

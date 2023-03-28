@@ -2,6 +2,9 @@
     <div class="signUp">
         <div class="container signupCard">
             <h2>Login</h2>
+
+            <div class="alert alert-danger" role="alert">
+            </div>
                 
                 <!-- <form @submit.prevent="handleSubmit"> -->
                     
@@ -16,10 +19,11 @@
                         @input="mobileDigit"
                         class="form-control"
                         autocomplete="off">
-                </div>
+                    </div>
+
                 <div class="form-group">
                     <input type="password" 
-                    class="form-control"
+                        class="form-control"
                         id="password"
                         v-model="password"
                         required
@@ -34,14 +38,14 @@
     </div>
 </template>
     
-    <script>
+<script>
     import axios from '@/axios/axios'
     
     export default {
       name: 'Login-',
       data(){
           return{
-            error: [],
+            msg: [],
             phoneNo: '',
             password: '',
             validationError: '',
@@ -54,21 +58,20 @@
                 phoneNo: this.phoneNo,
                 password: this.password
             }
-            // let response = await axios.post(`http://192.168.29.60:5000/login`,payload )
             let response = await axios.post(`/login`,payload )
-                console.log(response)
-                if(response.status==200){
-                axios.defaults.headers.common['Authorization'] = response.data.token
-                localStorage.setItem('token', response.data.token);
-                localStorage.setItem('userDetails', JSON.stringify(response.data));
-                const token  = localStorage.getItem('token')
-                if(token === response.data.token) {
-                    console.log(axios.defaults.headers.common['Authorization'])
-                    this.$router.push({name: 'Overview'})
-                }
-            }
-            console.warn(response)
+                // console.log(response)
 
+                if(response.status==200){
+                    axios.defaults.headers.common['Authorization'] = response.data.token
+                    localStorage.setItem('token', response.data.token);
+                    localStorage.setItem('userDetails', JSON.stringify(response.data));
+                    const token  = localStorage.getItem('token')
+                    if(token === response.data.token) {
+                        // console.log(axios.defaults.headers.common['Authorization'])
+                        this.$router.push({name: 'Overview'})
+                    }
+                }
+            alert(response.response.data)
         },
         mobileDigit(){
             this.phoneNo = this.phoneNo.replace(/[^0-9]/g, '')
@@ -76,15 +79,15 @@
 
         
         },
-  created() {
-    this.validationError = JSON.parse(localStorage.getItem('validationError'))
-  }
+        created() {
+            this.validationError = JSON.parse(localStorage.getItem('validationError'))
+        }
     }
     
     
-    </script>
+</script>
     
-    <style scoped>
+<style scoped>
     *{
         /* border: 1px solid red; */
     }

@@ -580,6 +580,7 @@ async mounted() {
         // this.$push(this.items)
         } catch (error) {
             console.error(error);
+          console.log(error + 'message')
         }
     }
   }

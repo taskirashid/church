@@ -76,6 +76,7 @@ export default {
         
         const response = await axios.post('/announcement/add-announcement', {body: this.message, title: this.titmessage});
         console.log(response.data);
+        // alert(response.data)
         this.body=response.data.news
         this.title=response.data.news
         

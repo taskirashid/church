@@ -79,8 +79,8 @@ export default {
   methods: {
     async getvicarList() {
         const response = await axios.get(`/achens-message/message`)
-        console.log(response)
-        console.warn(response.data.vicar)
+        // console.log(response)
+        // console.warn(response.data.vicar)
         this.vicarDetails=response.data.vicar
         this.asstVicarDetails=response.data.asstVicar
       },

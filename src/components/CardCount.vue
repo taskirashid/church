@@ -66,8 +66,8 @@ import axios from '@/axios/axios'
     methods: {
       async getCountList() {
         const response = await axios.get(`/dashboard/count`)
-        console.log(response)
-        console.warn(response.data.counts)
+        // console.log(response)
+        // console.warn(response.data.counts)
         this.countlist=response.data.counts
       },
     },

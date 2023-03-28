@@ -90,14 +90,14 @@ export default {
     methods: {
       async getAnnouncementList() {
         const response = await axios.get(`/announcement/get-latest`)
-        console.log(response)
-        console.warn(response.data.latestAnnouncement)
+        // console.log(response)
+        // console.warn(response.data.latestAnnouncement)
         this.list=response.data.latestAnnouncement
       },
       async getFlashNewsList() {
         const response = await axios.get(`/flash-news/latest`)
-        console.log(response)
-        console.warn(response.data.news)
+        // console.log(response)
+        // console.warn(response.data.news)
         this.flashlist=response.data.news
       },
       // async getCountList() {
